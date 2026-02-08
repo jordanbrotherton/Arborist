@@ -1,0 +1,8 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/io.github.jordanbrotherton.arborist.desktop.in
+data/io.github.jordanbrotherton.arborist.metainfo.xml.in
+data/io.github.jordanbrotherton.arborist.gschema.xml
+src/main.py
+src/window.py
+src/window.ui
