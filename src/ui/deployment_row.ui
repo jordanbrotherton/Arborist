@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <requires lib="adw" version="1.0"/>
+  <template class="DeploymentRow" parent="AdwActionRow">
+    <property name="title">deployment</property>
+    <property name="subtitle">commit hash</property>
+    <child type="prefix">
+      <object class="GtkBox">
+        <property name="valign">3</property>
+        <property name="spacing">12</property>
+        <child>
+          <object class="GtkImage" id="pinned">
+            <property name="icon-name">view-pin-symbolic</property>
+            <style>
+              <class name="flat"/>
+            </style>
+            <property name="tooltip-text" translatable="yes">Deployment Pinned</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage" id="staged">
+            <property name="icon-name">mail-forward-symbolic</property>
+            <style>
+              <class name="flat"/>
+              <class name="success"/>
+            </style>
+            <property name="tooltip-text" translatable="yes">Deployment Staged</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage" id="active">
+            <property name="icon-name">system-run-symbolic</property>
+            <style>
+              <class name="flat"/>
+            </style>
+            <property name="tooltip-text" translatable="yes">Deployment Booted</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child type="suffix">
+      <object class="GtkBox">
+        <property name="valign">3</property>
+        <property name="spacing">6</property>
+        <child>
+          <object class="GtkMenuButton">
+            <property name="icon-name">view-more-symbolic</property>
+            <style>
+              <class name="flat"/>
+            </style>
+            <property name="tooltip-text" translatable="yes">More deployment options</property>
+            <property name="menu-model">deployment_options</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+  <menu id="deployment_options">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Pin Deployment</attribute>
+        <attribute name="action">row.pin</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Rollback to Deployment</attribute>
+        <attribute name="action">row.rollback</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Set as Default</attribute>
+        <attribute name="action">row.set_default</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Undeploy</attribute>
+        <attribute name="action">row.undeploy</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

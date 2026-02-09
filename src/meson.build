@@ -33,3 +33,6 @@ arborist_sources = [
 ]
 
 install_data(arborist_sources, install_dir: moduledir)
+
+install_subdir('backend', install_dir: moduledir)
+install_subdir('widgets', install_dir: moduledir)

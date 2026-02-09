@@ -5,6 +5,8 @@
     "sdk" : "org.gnome.Sdk",
     "command" : "arborist",
     "finish-args" : [
+    	"--talk-name=org.projectatomic.rpmostree1",
+    	"--socket=system-bus",
         "--share=network",
         "--share=ipc",
         "--socket=fallback-x11",

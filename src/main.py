@@ -20,11 +20,11 @@
 import sys
 import gi
 
+from gi.repository import Gio, Adw
+from .window import ArboristWindow
+
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
-
-from gi.repository import Gtk, Gio, Adw
-from .window import ArboristWindow
 
 
 class ArboristApplication(Adw.Application):
@@ -33,7 +33,8 @@ class ArboristApplication(Adw.Application):
     def __init__(self):
         super().__init__(application_id='io.github.jordanbrotherton.arborist',
                          flags=Gio.ApplicationFlags.DEFAULT_FLAGS,
-                         resource_base_path='/io/github/jordanbrotherton/arborist')
+                         resource_base_path='/io/github/jordanbrotherton/'
+                         'arborist')
         self.create_action('quit', lambda *_: self.quit(), ['<control>q'])
         self.create_action('about', self.on_about_action)
         self.create_action('preferences', self.on_preferences_action)
@@ -52,12 +53,14 @@ class ArboristApplication(Adw.Application):
     def on_about_action(self, *args):
         """Callback for the app.about action."""
         about = Adw.AboutDialog(application_name='arborist',
-                                application_icon='io.github.jordanbrotherton.arborist',
+                                application_icon='io.github.jordanbrotherton.'
+                                'arborist',
                                 developer_name='Jordan',
                                 version='0.1.0',
                                 developers=['Jordan'],
                                 copyright='© 2026 Jordan')
-        # Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
+        # Translators: Replace "translator-credits" with your name/username,
+        # and optionally an email or URL.
         about.set_translator_credits(_('translator-credits'))
         about.present(self.props.active_window)
 

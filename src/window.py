@@ -19,12 +19,26 @@
 
 from gi.repository import Adw
 from gi.repository import Gtk
+from .widgets.deployment_row import DeploymentRow
+from .backend.rpm_ostree_provider import RPMOSTreeProvider
+
 
 @Gtk.Template(resource_path='/io/github/jordanbrotherton/arborist/window.ui')
 class ArboristWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'ArboristWindow'
 
-    label = Gtk.Template.Child()
+    deployment_list = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.provider = RPMOSTreeProvider()
+        self.populate_deployments()
+
+    def populate_deployments(self):
+        deployments = self.provider.get_deployments()
+        while (child := self.deployment_list.get_first_child()):
+            self.deployment_list.remove(child)
+
+        for data in deployments:
+            row = DeploymentRow(data)
+            self.deployment_list.append(row)
