@@ -19,7 +19,9 @@
 
 import sys
 import gi
+import asyncio
 
+from gi.events import GLibEventLoopPolicy
 from gi.repository import Gio, Adw
 from .window import ArboristWindow
 
@@ -86,5 +88,6 @@ class ArboristApplication(Adw.Application):
 
 def main(version):
     """The application's entry point."""
+    asyncio.set_event_loop_policy(GLibEventLoopPolicy())
     app = ArboristApplication()
     return app.run(sys.argv)

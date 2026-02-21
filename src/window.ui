@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <requires lib="Adw" version="1.0"/>
   <template class="ArboristWindow" parent="AdwApplicationWindow">
     <property name="title" translatable="yes">Arborist</property>
     <property name="default-width">800</property>
@@ -10,9 +9,26 @@
       <object class="AdwToolbarView">
         <child type="top">
           <object class="AdwHeaderBar">
+            <child>
+              <object class="GtkButton" id="upgrade_button">
+                <property name="icon-name">software-update-available-symbolic</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+                <property name="tooltip-text" translatable="yes">Upgrade System</property>
+                <signal name="clicked" handler="on_upgrade_clicked"/>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="rollback_button">
+                <property name="icon-name">object-rotate-left-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Rollback System</property>
+                <signal name="clicked" handler="on_rollback_clicked"/>
+              </object>
+            </child>
             <child type="end">
               <object class="GtkMenuButton">
-                <property name="primary">True</property>
+                <property name="primary">true</property>
                 <property name="icon-name">open-menu-symbolic</property>
                 <property name="tooltip-text" translatable="yes">Main Menu</property>
                 <property name="menu-model">primary_menu</property>
@@ -21,16 +37,16 @@
           </object>
         </child>
         <property name="content">
-              <object class="GtkListBox" id="deployment_list">
-                <property name="selection-mode">none</property>
-                <property name="margin-top">12</property>
-                <property name="margin-bottom">12</property>
-                <property name="margin-start">12</property>
-                <property name="margin-end">12</property>
-                <style>
-                  <class name="boxed-list"/>
-                </style>
-              </object>
+          <object class="GtkListBox" id="deployment_list">
+            <property name="selection-mode">0</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <style>
+              <class name="boxed-list"/>
+            </style>
+          </object>
         </property>
       </object>
     </property>

@@ -63,10 +63,6 @@
         <attribute name="action">row.pin</attribute>
       </item>
       <item>
-        <attribute name="label" translatable="yes">Rollback to Deployment</attribute>
-        <attribute name="action">row.rollback</attribute>
-      </item>
-      <item>
         <attribute name="label" translatable="yes">Set as Default</attribute>
         <attribute name="action">row.set_default</attribute>
       </item>

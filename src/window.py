@@ -18,6 +18,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from gi.repository import Adw
+import asyncio
 from gi.repository import Gtk
 from .widgets.deployment_row import DeploymentRow
 from .backend.rpm_ostree_provider import RPMOSTreeProvider
@@ -28,17 +29,26 @@ class ArboristWindow(Adw.ApplicationWindow):
     __gtype_name__ = 'ArboristWindow'
 
     deployment_list = Gtk.Template.Child()
+    rollback_button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.provider = RPMOSTreeProvider()
-        self.populate_deployments()
 
-    def populate_deployments(self):
-        deployments = self.provider.get_deployments()
+        asyncio.ensure_future(self.setup_provider())
+
+        # self.rollback_button.connect("clicked", self.on_rollback_clicked)
+
+    async def setup_provider(self):
+        await self.provider.setup()
+        await self.populate_deployments()
+
+    async def populate_deployments(self):
+        deployments = await self.provider.get_deployments()
         while (child := self.deployment_list.get_first_child()):
             self.deployment_list.remove(child)
 
         for data in deployments:
             row = DeploymentRow(data)
             self.deployment_list.append(row)
+
