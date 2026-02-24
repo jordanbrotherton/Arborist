@@ -59,7 +59,7 @@
   <menu id="deployment_options">
     <section>
       <item>
-        <attribute name="label" translatable="yes">Pin Deployment</attribute>
+        <attribute name="label" translatable="yes">Toggle Pin</attribute>
         <attribute name="action">row.pin</attribute>
       </item>
       <item>

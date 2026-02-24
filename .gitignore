@@ -1,4 +1,18 @@
+# IDEs
 .vscode/
 .idea/
+
+# Flatpak Leftovers
 .flatpak-builder/
+.flatpak/
+
+# Python
 .venv/
+
+# Meson
+builddir/
+
+# AppImage
+Arborist.AppDir/
+*.AppImage
+

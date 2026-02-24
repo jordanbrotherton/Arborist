@@ -1,10 +1,11 @@
 [Desktop Entry]
-Name=arborist
+Name=Arborist
+Comment=Manage your Atomic deployments.
 Exec=arborist
 Icon=io.github.jordanbrotherton.arborist
 Terminal=false
 Type=Application
 Categories=Utility;
-Keywords=GTK;
+Keywords=GTK;OSTree;Update;Deployment
 StartupNotify=true
 DBusActivatable=true
