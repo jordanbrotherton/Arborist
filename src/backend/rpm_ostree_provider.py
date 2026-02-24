@@ -33,9 +33,9 @@ class RPMOSTreeDBusProvider(AtomicProvider):
                 bus,
                 Gio.DBusProxyFlags.NONE,
                 None,
-                'org.projectatomic.rpmostree1',
-                '/org/projectatomic/rpmostree1/Sysroot',
-                'org.projectatomic.rpmostree1.Sysroot',
+                BUS_NAME,
+                SYSROOT_PATH,
+                SYSROOT_NAME,
                 None
             )
             return proxy.get_name_owner() is not None
