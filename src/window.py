@@ -53,6 +53,7 @@ class ArboristWindow(Adw.ApplicationWindow):
             self.deployment_list.append(row)
 
     def _on_upgrade_clicked(self, button: Gtk.Button):
+        # TODO - Add checking, and warn if automatic updates are enabled.
         dialog = TaskProgress(
             self,
             _("Upgrading"),

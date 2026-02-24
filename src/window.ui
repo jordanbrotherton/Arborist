@@ -29,7 +29,7 @@
             <child>
               <object class="GtkButton" id="rebase_button">
                 <property name="icon-name">system-software-install-symbolic</property>
-                <property name="tooltip-text" translatable="yes">Resbase System</property>
+                <property name="tooltip-text" translatable="yes">Rebase System</property>
                 <signal name="clicked" handler="on_rebase_clicked"/>
               </object>
             </child>
@@ -86,7 +86,7 @@
                 <property name="child">
                   <object class="AdwStatusPage" id="empty_status_page">
                     <property name="title" translatable="yes">Provider Not Found</property>
-                    <property name="description" translatable="yes">Arborist could not find an Atomic provider on your system.</property>
+                    <property name="description" translatable="yes">Arborist could not find an atomic provider on your system.</property>
                     <property name="icon-name">computer-fail-symbolic</property>
                   </object>
                 </property>
