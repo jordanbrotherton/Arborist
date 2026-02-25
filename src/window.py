@@ -28,7 +28,7 @@ class ArboristWindow(Adw.ApplicationWindow):
 
             self.upgrade_button.connect("clicked", self._on_upgrade_clicked)
             self.rollback_button.connect("clicked", self._on_rollback_clicked)
-            self.rollback_button.connect("clicked", self._on_rebase_clicked)
+            self.rebase_button.connect("clicked", self._on_rebase_clicked)
         else:
             self.window_view.set_visible_child_name("status_page")
             self.upgrade_button.set_sensitive(False)
@@ -72,14 +72,40 @@ class ArboristWindow(Adw.ApplicationWindow):
         asyncio.ensure_future(self._run_task(dialog, self.provider.rollback))
 
     def _on_rebase_clicked(self, button: Gtk.Button):
-        # TODO - Unstub rebase and ask for remote.
-        dialog = TaskProgress(
-            self,
-            _("Rebasing"),
-            _("Arborist is rebasing to a new image...")
+        option = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Rebase"),
+            body=_("Enter the remote reference to rebase to.")
         )
 
-        asyncio.ensure_future(self._run_task(dialog, self.provider.rebase))
+        entry = Gtk.Entry()
+        entry.set_placeholder_text("fedora:fedora/43/x86_64/silverblue")
+        entry.set_activates_default(True)
+
+        option.set_extra_child(entry)
+        option.add_response('cancel', _("Cancel"))
+        option.add_response('confirm', _("Rebase"))
+        option.set_response_appearance(
+            'rebase',
+            Adw.ResponseAppearance.SUGGESTED
+        )
+
+        option.choose(None, self._on_rebase_option_chosen, entry)
+
+    def _on_rebase_option_chosen(self,
+                                 dialog: Adw.MessageDialog,
+                                 option: Gio.Task,
+                                 entry: Gtk.Entry):
+        choice = dialog.choose_finish(option)
+        if choice == 'confirm':
+            dialog = TaskProgress(
+                self,
+                _("Rebasing"),
+                _("Arborist is rebasing to a new image...")
+            )
+
+            asyncio.ensure_future(self._run_task(
+                dialog, self.provider.rebase, entry.get_text().strip()))
 
     def _on_pin_clicked(self, deployment_row: DeploymentRow):
         dialog = TaskProgress(
@@ -155,4 +181,5 @@ class ArboristWindow(Adw.ApplicationWindow):
             task (Callable): The task to be executed.
         """
         await dialog.run_task(task, *args)
+        await asyncio.sleep(0.5)
         await self.populate_deployments()

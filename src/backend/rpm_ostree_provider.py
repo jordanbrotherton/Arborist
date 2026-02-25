@@ -97,8 +97,11 @@ class RPMOSTreeDBusProvider(AtomicProvider):
         upgrade_path = await os_interface.call_upgrade({})
         await self._run_transaction(upgrade_path, body_method)
 
-    def rebase(self, remote: str, body_method):
-        pass
+    async def rebase(self, remote: str, body_method):
+        os_interface = await self._get_os_interface()
+
+        rebase_path = await os_interface.call_rebase({}, remote, [])
+        await self._run_transaction(rebase_path, body_method)
 
     async def _get_os_interface(self, os_name: str = ""):
         """Fetches the OS DBus interface for rpm-ostree.
