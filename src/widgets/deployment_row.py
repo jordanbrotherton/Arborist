@@ -45,9 +45,10 @@ class DeploymentRow(Adw.ActionRow):
         pin_action.connect("activate", self._on_pin_clicked)
         self.action_group.add_action(pin_action)
 
-        undeploy_action = Gio.SimpleAction.new("undeploy", None)
-        undeploy_action.connect("activate", self._on_undeploy_clicked)
-        self.action_group.add_action(undeploy_action)
+        if not (deployment.booted or deployment.staged or deployment.pinned):
+            undeploy_action = Gio.SimpleAction.new("undeploy", None)
+            undeploy_action.connect("activate", self._on_undeploy_clicked)
+            self.action_group.add_action(undeploy_action)
 
     def _on_pin_clicked(self, action, parameter):
         self.emit('pin_called')
