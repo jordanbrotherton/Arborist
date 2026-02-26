@@ -181,5 +181,4 @@ class ArboristWindow(Adw.ApplicationWindow):
             task (Callable): The task to be executed.
         """
         await dialog.run_task(task, *args)
-        await asyncio.sleep(0.5)
-        await self.populate_deployments()
+        await self._populate_deployments()
