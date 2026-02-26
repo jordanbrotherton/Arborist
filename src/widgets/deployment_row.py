@@ -1,7 +1,5 @@
-import gi
+from gettext import gettext as _
 from gi.repository import Adw, Gtk, GObject, Gio
-gi.require_version('Adw', '1')
-gi.require_version('Gtk', '4.0')
 
 
 @Gtk.Template(
@@ -29,8 +27,22 @@ class DeploymentRow(Adw.ActionRow):
         super().__init__(**kwargs)
 
         self.init_template()
-        self.set_title(deployment.version)
-        self.set_subtitle(deployment.origin)
+        
+        if deployment.version:
+            self.set_title(deployment.version)
+        else:
+            self.set_title(_("No version data"))
+
+        if deployment.origin:
+            self.set_subtitle(deployment.origin)
+        elif deployment.container_image_reference:
+            self.set_subtitle(deployment.container_image_reference)
+        elif deployment.id:
+            self.set_subtitle(deployment.id)
+        elif deployment.checksum:
+            self.set_subtitle(deployment.checksum)
+        else:
+            self.set_subtitle(_("No additional data"))
 
         self.deployment = deployment
 

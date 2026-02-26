@@ -72,16 +72,25 @@ class RPMOSTreeDBusProvider(AtomicProvider):
         if not data:
             return []
 
+        def get_value(item: dict, key: str, default):
+            if key in item:
+                data = item[key]
+                return data.value
+            else:
+                return default
+
         return [
             Deployment(
-                id=item['id'].value,
-                origin=item['origin'].value,
-                checksum=item['checksum'].value,
-                version=item['version'].value,
-                osname=item['osname'].value,
-                booted=item['booted'].value,
-                staged=item['staged'].value,
-                pinned=item['pinned'].value
+                id=get_value(item, 'id', ""),
+                origin=get_value(item, 'origin', ""),
+                container_image_reference=get_value(
+                    item, 'container-image-reference', ""),
+                checksum=get_value(item, 'checksum', ""),
+                version=get_value(item, 'version', ""),
+                osname=get_value(item, 'osname', ""),
+                booted=get_value(item, 'booted', False),
+                staged=get_value(item, 'staged', False),
+                pinned=get_value(item, 'pinned', False)
             ) for item in data
         ]
 
