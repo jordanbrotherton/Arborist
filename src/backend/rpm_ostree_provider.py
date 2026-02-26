@@ -16,8 +16,6 @@ BUS_NAME = 'org.projectatomic.rpmostree1'
 SYSROOT_PATH = '/org/projectatomic/rpmostree1/Sysroot'
 SYSROOT_NAME = 'org.projectatomic.rpmostree1.Sysroot'
 
-DBUS_PROPS_NAME = 'org.freedesktop.DBus.Properties'
-
 OS_NAME = 'org.projectatomic.rpmostree1.OS'
 
 TRANSACTION_NAME = 'org.projectatomic.rpmostree1.Transaction'
@@ -58,12 +56,6 @@ class RPMOSTreeDBusProvider(AtomicProvider):
         )
         self.sysroot_interface = self.sysroot_proxy.get_interface(
             SYSROOT_NAME
-        )
-        self.properties_interface = self.sysroot_proxy.get_interface(
-            DBUS_PROPS_NAME
-        )
-        self.properties_interface.on_properties_changed(
-            self._on_properties_changed
         )
 
     async def get_deployments(self) -> List[Deployment]:
@@ -120,13 +112,6 @@ class RPMOSTreeDBusProvider(AtomicProvider):
 
         rebase_path = await os_interface.call_rebase({}, remote, [])
         await self._run_transaction(rebase_path, body_method)
-
-    async def _on_properties_changed(self,
-                                     interface_name: str,
-                                     changed_properties: dict,
-                                     invalidated_properties: List[str]):
-        if "Deployments" in changed_properties:
-            self.deployments_changed.emit()
 
     async def _get_os_interface(self, os_name: str = ""):
         """Fetches the OS DBus interface for rpm-ostree.
@@ -222,6 +207,12 @@ class RPMOSTreeDBusProvider(AtomicProvider):
 
             def message_handler(message):
                 if message.member == 'Message':
+                    text = message.body[0]
+                    body_method(text)
+                elif message.member == 'TaskBegin':
+                    text = message.body[0]
+                    body_method(text)
+                elif message.member == 'TaskEnd':
                     text = message.body[0]
                     body_method(text)
                 elif message.member == 'Finished':
