@@ -16,6 +16,8 @@ BUS_NAME = 'org.projectatomic.rpmostree1'
 SYSROOT_PATH = '/org/projectatomic/rpmostree1/Sysroot'
 SYSROOT_NAME = 'org.projectatomic.rpmostree1.Sysroot'
 
+DBUS_PROPS_NAME = 'org.freedesktop.DBus.Properties'
+
 OS_NAME = 'org.projectatomic.rpmostree1.OS'
 
 TRANSACTION_NAME = 'org.projectatomic.rpmostree1.Transaction'
@@ -57,6 +59,12 @@ class RPMOSTreeDBusProvider(AtomicProvider):
         self.sysroot_interface = self.sysroot_proxy.get_interface(
             SYSROOT_NAME
         )
+        self.properties_interface = self.sysroot_proxy.get_interface(
+            DBUS_PROPS_NAME
+        )
+        self.properties_interface.on_properties_changed(
+            self._on_properties_changed
+        )
 
     async def get_deployments(self) -> List[Deployment]:
         data = await self.sysroot_interface.get_deployments()
@@ -67,6 +75,7 @@ class RPMOSTreeDBusProvider(AtomicProvider):
         return [
             Deployment(
                 id=item['id'].value,
+                origin=item['origin'].value,
                 checksum=item['checksum'].value,
                 version=item['version'].value,
                 osname=item['osname'].value,
@@ -102,6 +111,13 @@ class RPMOSTreeDBusProvider(AtomicProvider):
 
         rebase_path = await os_interface.call_rebase({}, remote, [])
         await self._run_transaction(rebase_path, body_method)
+
+    async def _on_properties_changed(self,
+                                     interface_name: str,
+                                     changed_properties: dict,
+                                     invalidated_properties: List[str]):
+        if "Deployments" in changed_properties:
+            self.deployments_changed.emit()
 
     async def _get_os_interface(self, os_name: str = ""):
         """Fetches the OS DBus interface for rpm-ostree.

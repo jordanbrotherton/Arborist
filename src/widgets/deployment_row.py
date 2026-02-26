@@ -30,7 +30,7 @@ class DeploymentRow(Adw.ActionRow):
 
         self.init_template()
         self.set_title(deployment.version)
-        self.set_subtitle(deployment.id)
+        self.set_subtitle(deployment.origin)
 
         self.deployment = deployment
 
