@@ -1,5 +1,5 @@
 #!/bin/bash
 HERE="$(dirname "$(readlink -f "${0}")")"
-export PYTHONPATH="$HERE/usr/lib/python3.11/site-packages:$PYTHONPATH"
+export PYTHONPATH="$HERE/usr/lib/python3/site-packages:$PYTHONPATH"
 export XDG_DATA_DIRS="$HERE/usr/share:$XDG_DATA_DIRS"
 exec /usr/bin/python3 "$HERE/usr/bin/arborist" "$@"

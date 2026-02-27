@@ -1,0 +1,39 @@
+name: Build AppImage
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+
+      - name: Set up Python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install -y git make meson gettext libglib2.0-dev-bin libglib2.0-bin desktop-file-utils python3-pip fuse file
+
+      - name: Get appimagetool
+        run: |
+          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+
+      - name: Build AppImage
+        run: |
+          make
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: AppImage
+          path: Arborist-x86_64.AppImage
