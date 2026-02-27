@@ -2,7 +2,7 @@ name: Build AppImage
 
 on:
   push:
-    branches: [ "main", "ci-builds" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
