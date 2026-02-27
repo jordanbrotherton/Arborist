@@ -2,7 +2,7 @@ name: Build AppImage
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "ci-builds" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
@@ -22,7 +22,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo apt-get update
+          sudo apt update
           sudo apt install -y git make meson gettext libglib2.0-dev-bin libglib2.0-bin desktop-file-utils python3-pip fuse file
 
       - name: Get appimagetool
