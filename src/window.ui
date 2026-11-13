@@ -33,6 +33,13 @@
                 <signal name="clicked" handler="on_rebase_clicked"/>
               </object>
             </child>
+            <child>
+              <object class="GtkButton" id="deploy_button">
+                <property name="icon-name">list-add-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Deploy</property>
+                <signal name="clicked" handler="on_deploy_clicked"/>
+              </object>
+            </child>
             <child type="end">
               <object class="GtkMenuButton">
                 <property name="primary">true</property>

@@ -89,6 +89,12 @@ class RPMOSTreeDBusProvider(AtomicProvider):
     async def pin_deployment(self, checksum: str, body_method):
         await self._run_ostree("ostree_pin.py", body_method, checksum)
 
+    async def deploy_deployment(self, revision: str, body_method):
+        os_interface = await self._get_os_interface()
+
+        deploy_path = await os_interface.call_deploy(revision, {})
+        await self._run_transaction(deploy_path, body_method)
+
     async def undeploy_deployment(self, checksum: str, body_method):
         await self._run_ostree("ostree_undeploy.py", body_method, checksum)
 

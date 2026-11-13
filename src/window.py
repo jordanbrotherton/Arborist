@@ -18,6 +18,7 @@ class ArboristWindow(Adw.ApplicationWindow):
     upgrade_button: Gtk.Button = Gtk.Template.Child()
     rollback_button: Gtk.Button = Gtk.Template.Child()
     rebase_button: Gtk.Button = Gtk.Template.Child()
+    deploy_button: Gtk.Button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -29,11 +30,13 @@ class ArboristWindow(Adw.ApplicationWindow):
             self.upgrade_button.connect("clicked", self._on_upgrade_clicked)
             self.rollback_button.connect("clicked", self._on_rollback_clicked)
             self.rebase_button.connect("clicked", self._on_rebase_clicked)
+            self.deploy_button.connect("clicked", self._on_deploy_clicked)
         else:
             self.window_view.set_visible_child_name("status_page")
             self.upgrade_button.set_sensitive(False)
             self.rollback_button.set_sensitive(False)
             self.rebase_button.set_sensitive(False)
+            self.deploy_button.set_sensitive(False)
 
     async def _setup_provider(self):
         await self.provider.setup()
@@ -86,11 +89,32 @@ class ArboristWindow(Adw.ApplicationWindow):
         option.add_response('cancel', _("Cancel"))
         option.add_response('confirm', _("Rebase"))
         option.set_response_appearance(
-            'rebase',
+            'confirm',
             Adw.ResponseAppearance.SUGGESTED
         )
 
         option.choose(None, self._on_rebase_option_chosen, entry)
+
+    def _on_deploy_clicked(self, button: Gtk.Button):
+        option = Adw.MessageDialog(
+            transient_for=self,
+            heading=_("Deploy"),
+            body=_("Enter the commit ID to deploy.")
+        )
+
+        entry = Gtk.Entry()
+        entry.set_placeholder_text("Commit ID")
+        entry.set_activates_default(True)
+
+        option.set_extra_child(entry)
+        option.add_response('cancel', _("Cancel"))
+        option.add_response('confirm', _("Deploy"))
+        option.set_response_appearance(
+            'confirm',
+            Adw.ResponseAppearance.SUGGESTED
+        )
+
+        option.choose(None, self._on_deploy_option_chosen, entry)
 
     def _on_rebase_option_chosen(self,
                                  dialog: Adw.MessageDialog,
@@ -106,6 +130,21 @@ class ArboristWindow(Adw.ApplicationWindow):
 
             asyncio.ensure_future(self._run_task(
                 dialog, self.provider.rebase, entry.get_text().strip()))
+
+    def _on_deploy_option_chosen(self,
+                                 dialog: Adw.MessageDialog,
+                                 option: Gio.Task,
+                                 entry: Gtk.Entry):
+        choice = dialog.choose_finish(option)
+        if choice == 'confirm':
+            dialog = TaskProgress(
+                self,
+                _("Deploying"),
+                _("Arborist is adding a new deployment...")
+            )
+
+            asyncio.ensure_future(self._run_task(
+                dialog, self.provider.deploy_deployment, entry.get_text().strip()))
 
     def _on_pin_clicked(self, deployment_row: DeploymentRow):
         dialog = TaskProgress(

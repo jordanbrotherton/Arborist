@@ -43,6 +43,17 @@ class AtomicProvider(ABC):
         pass
 
     @abstractmethod
+    async def deploy_deployment(self, revision: str, body_method: Callable[[str], None]):
+        """Deploys a provided revision.
+
+        Args:
+            revision (str): The commit version to deploy.
+            body_method (Callable[[str], None]): The _on_body_change method of
+                                                 the progress.
+        """
+        pass
+
+    @abstractmethod
     async def undeploy_deployment(
             self, checksum: str, body_method: Callable[[str], None]):
         """Undeploys a provided deployment.
