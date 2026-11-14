@@ -11,17 +11,24 @@ Arborist was created with Fedora Silverblue and its derivatives in mind.
 Currently, Arborist has support for these Atomic providers:
 * rpm-ostree
 
+## Installation
+To install Arborist, download the RPM file in [Releases](https://github.com/jordanbrotherton/Arborist/releases/latest).
+With the RPM file, install it with rpm-ostree:
+
+`rpm-ostree install ./arborist-[version].fc[xx].noarch.rpm`
+
 ## Building
-Arborist makes use of AppImage to minimize dependencies and to allow access to the host system. Flatpak blocks the /run directory, which some Atomic providers require to run and monitor transactions.
+Arborist makes use of RPM to minimize dependencies and to allow access to the host system. Flatpak blocks the /run directory, which some Atomic providers require to run and monitor transactions. AppImage is no longer supported due to issues with modern Fedora versions.
 
-Arborist has been built with a Fedora 43 Distrobox image.
+Arborist needs these dependencies:
 
-Meson, GTK, libadwaita, and Python are required to build Arborist.
+`rpmdevtools rpm-build meson ninja-build python3-devel gtk4-devel libadwaita-devel desktop-file-utils libappstream-glib`
 
-You will also need appimagetool, to obtain it run this command in the project root:
+To build Arborist into an RPM, simply run these commands in a Fedora Toolbox/Distrobox:
 
-`wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage`
-
-To build Arborist into an AppImage, simply run the Makefile:
-
-`make`
+```
+sudo dnf install rpmdevtools rpm-build meson ninja-build python3-devel gtk4-devel libadwaita-devel desktop-file-utils libappstream-glib
+rpmdev-setuptree
+git archive --format=tar.gz --prefix=arborist-1.0.0/ -o ~/rpmbuild/SOURCES/arborist-1.0.0.tar.gz HEAD
+rpmbuild -ba arborist.spec
+```

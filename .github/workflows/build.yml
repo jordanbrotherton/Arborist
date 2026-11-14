@@ -1,41 +1,39 @@
-name: Build AppImage
+name: Build RPM
 
 on:
   push:
     branches: [ "main" ]
+    tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
-  build:
+  build-rpm:
     runs-on: ubuntu-latest
-    
+    container:
+      image: fedora:latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6.0.2
 
-      - name: Set up Python
-        uses: actions/setup-python@v6.2.0
-        with:
-          python-version: '3.11'
-
-      - name: Install Dependencies
+      - name: Install RPM build dependencies
         run: |
-          sudo apt update
-          sudo apt install -y git make meson gettext libglib2.0-dev-bin libglib2.0-bin desktop-file-utils python3-pip fuse file
+          dnf install -y rpmdevtools rpm-build meson ninja-build python3-devel gtk4-devel libadwaita-devel desktop-file-utils libappstream-glib git
 
-      - name: Get appimagetool
+      - name: Set up RPM build tree and build
         run: |
-          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
-          chmod +x appimagetool-x86_64.AppImage
+          rpmdev-setuptree
+          VERSION=$(rpmspec -q --qf "%{version}\n" arborist.spec | head -n 1)
+          git archive --format=tar.gz --prefix="arborist-${VERSION}/" -o "$HOME/rpmbuild/SOURCES/arborist-${VERSION}.tar.gz" HEAD
+          cp arborist.spec "$HOME/rpmbuild/SPECS/"
+          rpmbuild -ba "$HOME/rpmbuild/SPECS/arborist.spec"
+          mkdir -p dist
+          cp "$HOME/rpmbuild/RPMS/noarch/"*.rpm dist/
 
-      - name: Build AppImage
-        run: |
-          make
-
-      - name: Upload Artifact
+      - name: Upload RPM Artifact
         uses: actions/upload-artifact@v7
         with:
-          name: AppImage
-          path: Arborist-x86_64.AppImage
+          name: arborist-rpm
+          path: dist/*.noarch.rpm
