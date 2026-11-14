@@ -30,7 +30,6 @@ class ArboristApplication(Adw.Application):
                          'arborist')
         self.create_action('quit', lambda *_: self.quit(), ['<control>q'])
         self.create_action('about', self.on_about_action)
-        self.create_action('preferences', self.on_preferences_action)
 
     def do_activate(self):
         """Called when the application is activated.
@@ -49,7 +48,7 @@ class ArboristApplication(Adw.Application):
                                 application_icon='io.github.jordanbrotherton.'
                                 'arborist',
                                 developer_name='Jordan',
-                                version='0.1.0',
+                                version='1.0.0',
                                 developers=['Jordan'],
                                 copyright='© 2026 Jordan')
         # Translators: Replace "translator-credits" with your name/username,
