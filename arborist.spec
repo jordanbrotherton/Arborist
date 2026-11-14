@@ -11,6 +11,7 @@ BuildArch:      noarch
 BuildRequires:  meson
 BuildRequires:  ninja-build
 BuildRequires:  python3-devel
+BuildRequires:  python3-rpm-macros
 BuildRequires:  gtk4-devel
 BuildRequires:  libadwaita-devel
 BuildRequires:  desktop-file-utils
@@ -24,7 +25,7 @@ Requires:       libadwaita
 Requires:       rpm-ostree
 
 %description
-Arborist is a graphical utility to manage an atomic system. 
+Arborist is a graphical utility to manage an atomic system.
 It provides an easy to use interface to help visualize and perform atomic transactions.
 
 %prep
@@ -36,6 +37,7 @@ It provides an easy to use interface to help visualize and perform atomic transa
 
 %install
 %meson_install
+%py3_shebang_fix %{buildroot}%{_bindir}/arborist
 %find_lang %{name} || true
 
 %check
