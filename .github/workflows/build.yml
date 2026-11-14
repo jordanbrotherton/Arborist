@@ -15,12 +15,12 @@ jobs:
       image: fedora:latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6.0.2
-
       - name: Install RPM build dependencies
         run: |
-          dnf install -y rpmdevtools rpm-build meson ninja-build python3-devel gtk4-devel libadwaita-devel desktop-file-utils libappstream-glib git
+          dnf install -y rpmdevtools rpm-build meson ninja-build python3-devel gtk4-devel libadwaita-devel desktop-file-utils libappstream-glib git gettext
+
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
 
       - name: Set up RPM build tree and build
         run: |
